@@ -45,6 +45,7 @@ export class PowerOrderCreationForm extends React.Component {
         let title = '';
         let titleClass = 'mr-4';
         const header = [];
+        const header2 = [];
         const votes = [];
         if (this.props.orderTypes.length) {
             title = 'Create order:';
@@ -53,7 +54,7 @@ export class PowerOrderCreationForm extends React.Component {
                     {Forms.createRadio('order_type', orderLetter, ORDER_BUILDER[orderLetter].name, this.props.orderType, onChange)}
                 </div>
             )));
-            header.push(Forms.createReset('reset', false, onReset));
+            header2.push(Forms.createReset('reset', false, onReset));
         } else if (this.props.power.order_is_set) {
             title = 'Unorderable power.';
             titleClass += ' neutral';
@@ -61,7 +62,7 @@ export class PowerOrderCreationForm extends React.Component {
             title = 'No orders available for this power.';
         }
         if (!this.props.power.order_is_set) {
-            header.push(Forms.createButton('pass', this.props.onPass));
+            header2.push(Forms.createButton('pass', this.props.onPass));
         }
 
         if (this.props.role !== STRINGS.OMNISCIENT_TYPE) {
@@ -91,6 +92,9 @@ export class PowerOrderCreationForm extends React.Component {
                 <div><strong key={'title'} className={titleClass}>{title}</strong></div>
                 <form className={'form-inline power-actions-form'}>
                     {header}
+                </form>
+                <form className={'form-inline power-actions-form'}>
+                    {header2}
                     {Forms.createButton(
                         (this.props.power.wait ? 'no wait' : 'wait'),
                         this.props.onSetWaitFlag,

@@ -1073,7 +1073,7 @@ export class ContentGame extends React.Component {
         );
     }
 
-    renderTabResults(toDisplay, initialEngine) {
+    renderTabResults(toDisplay, initialEngine, tabSelector) {
         const {engine, pastPhases, phaseIndex} = this.__get_engine_to_display(initialEngine);
         let orders = {};
         let orderResult = null;
@@ -1130,15 +1130,18 @@ export class ContentGame extends React.Component {
 
         return (
             <Tab id={'tab-phase-history'} display={toDisplay}>
-                <Row>
-                    <div className={'col-xl'}>
+                <div className={'map_and_controls'}>
+                    <div className={'map_container'}>
                         {this.state.historyCurrentOrders && (
                             <div className={'history-current-orders'}>{this.state.historyCurrentOrders.join(', ')}</div>
                         )}
                         {this.renderMapForResults(engine, this.state.historyShowOrders)}
                     </div>
-                    <div className={'col-xl'}>{orderView}</div>
-                </Row>
+                    <div className={'controls_container'}>
+                        {tabSelector}
+                        {orderView}
+                    </div>
+                </div>
                 {toDisplay && <HotKey keys={['arrowleft']} onKeysCoincide={this.onDecrementPastPhase}/>}
                 {toDisplay && <HotKey keys={['arrowright']} onKeysCoincide={this.onIncrementPastPhase}/>}
                 {toDisplay && <HotKey keys={['home']} onKeysCoincide={this.displayFirstPastPhase}/>}
@@ -1147,19 +1150,20 @@ export class ContentGame extends React.Component {
         );
     }
 
-    renderTabMessages(toDisplay, initialEngine, currentPowerName) {
+    renderTabMessages(toDisplay, initialEngine, currentPowerName, tabSelector) {
         const {engine, pastPhases, phaseIndex} = this.__get_engine_to_display(initialEngine);
 
         return (
             <Tab id={'tab-phase-history'} display={toDisplay}>
-                <Row>
-                    <div className={'col-xl'}>
+                <div className={'map_and_controls'}>
+                    <div className={'map_container'}>
                         {this.state.historyCurrentOrders && (
                             <div className={'history-current-orders'}>{this.state.historyCurrentOrders.join(', ')}</div>
                         )}
                         {this.renderMapForMessages(engine, this.state.historyShowOrders)}
                     </div>
-                    <div className={'col-xl'}>
+                    <div className={'controls_container'}>
+                        {tabSelector}
                         {this.__form_phases(pastPhases, phaseIndex)}
                         {pastPhases[phaseIndex] === initialEngine.phase ? (
                             this.renderCurrentMessages(initialEngine, currentPowerName)
@@ -1167,7 +1171,7 @@ export class ContentGame extends React.Component {
                             this.renderPastMessages(engine, currentPowerName)
                         )}
                     </div>
-                </Row>
+                </div>
                 {toDisplay && <HotKey keys={['arrowleft']} onKeysCoincide={this.onDecrementPastPhase}/>}
                 {toDisplay && <HotKey keys={['arrowright']} onKeysCoincide={this.onIncrementPastPhase}/>}
                 {toDisplay && <HotKey keys={['home']} onKeysCoincide={this.displayFirstPastPhase}/>}
@@ -1176,18 +1180,20 @@ export class ContentGame extends React.Component {
         );
     }
 
-    renderTabCurrentPhase(toDisplay, engine, powerName, orderType, orderPath, currentPowerName, currentTabOrderCreation) {
+    renderTabCurrentPhase(toDisplay, engine, powerName, orderType, orderPath, currentPowerName, currentTabOrderCreation, tabSelector) {
         const powerNames = Object.keys(engine.powers);
         powerNames.sort();
         const orderedPowers = powerNames.map(pn => engine.powers[pn]);
         return (
             <Tab id={'tab-current-phase'} display={toDisplay}>
-                <Row>
-                    <div className={'col-xl'}>
+                <div className={'map_and_controls'}>
+                    <div className={'map_container'}>
                         {this.renderMapForCurrent(engine, powerName, orderType, orderPath)}
                     </div>
-                    <div className={'col-xl'}>
+
+                    <div className={'controls_container'}>
                         {/* Orders. */}
+                        {tabSelector}
                         <div className={'panel-orders mb-4'}>
                             {currentTabOrderCreation ? <div className="mb-4">{currentTabOrderCreation}</div> : ''}
                             <PowerOrdersActionBar
@@ -1207,7 +1213,7 @@ export class ContentGame extends React.Component {
                             </div>
                         </div>
                     </div>
-                </Row>
+                </div>
             </Tab>
         );
     }
@@ -1336,6 +1342,8 @@ export class ContentGame extends React.Component {
             </div>
         );
 
+        const tabSelector = <Tabs menu={tabNames} titles={tabTitles} onChange={this.onChangeMainTab} active={mainTab}/>
+
         return (
             <main>
                 <Helmet>
@@ -1345,21 +1353,20 @@ export class ContentGame extends React.Component {
                             afterTitle={navAfterTitle}
                             username={page.channel.username}
                             navigation={navigation}/>
-                <Tabs menu={tabNames} titles={tabTitles} onChange={this.onChangeMainTab} active={mainTab}>
-                    {/* Tab Phase history. */}
-                    {(hasTabPhaseHistory && mainTab === 'phase_history' && this.renderTabResults(mainTab === 'phase_history', engine)) || ''}
-                    {mainTab === 'messages' && this.renderTabMessages(mainTab === 'messages', engine, currentPowerName)}
-                    {/* Tab Current phase. */}
-                    {(mainTab === 'current_phase' && hasTabCurrentPhase && this.renderTabCurrentPhase(
-                        mainTab === 'current_phase',
-                        engine,
-                        currentPowerName,
-                        orderBuildingType,
-                        this.state.orderBuildingPath,
-                        currentPowerName,
-                        currentTabOrderCreation
-                    )) || ''}
-                </Tabs>
+                {/* Tab Phase history. */}
+                {(hasTabPhaseHistory && mainTab === 'phase_history' && this.renderTabResults(mainTab === 'phase_history', engine, tabSelector)) || ''}
+                {mainTab === 'messages' && this.renderTabMessages(mainTab === 'messages', engine, currentPowerName, tabSelector)}
+                {/* Tab Current phase. */}
+                {(mainTab === 'current_phase' && hasTabCurrentPhase && this.renderTabCurrentPhase(
+                    mainTab === 'current_phase',
+                    engine,
+                    currentPowerName,
+                    orderBuildingType,
+                    this.state.orderBuildingPath,
+                    currentPowerName,
+                    currentTabOrderCreation,
+                    tabSelector
+                )) || ''}
             </main>
         );
     }

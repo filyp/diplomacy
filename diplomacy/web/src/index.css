@@ -2,7 +2,8 @@
 /** Common. **/
 
 body {
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
+    overflow: hidden;
 }
 
 span.dropdown-item {
@@ -50,6 +51,24 @@ span.dropdown-item {
     color: green;
 }
 
+.map_and_controls {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    /* height: 100%; */
+    gap: 25px;
+}
+
+.map_container {
+    /* height: calc(100vh - 100px); */
+    width: calc((100vh - 120px) / 1360 * 1835);
+}
+
+.controls_container {
+    flex-grow: 1;
+    height: 100%;
+}
+
 #past-map svg, #current-map svg, #messages-map svg {
     display: block;
     width: 100%;
@@ -78,6 +97,10 @@ main {
 
 .power-actions-form button + button, .panel-orders .bar button + button, .games-form button + button {
     margin-left: 0.5rem;
+}
+
+.power-actions-form {
+    margin-bottom: 1.4rem;
 }
 
 .link-unread-message {
