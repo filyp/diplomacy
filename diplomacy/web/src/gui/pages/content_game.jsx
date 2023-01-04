@@ -19,7 +19,6 @@ import Scrollchor from 'react-scrollchor';
 import {SelectLocationForm} from "../forms/select_location_form";
 import {SelectViaForm} from "../forms/select_via_form";
 import {Order} from "../utils/order";
-import {Row} from "../components/layouts";
 import {Tabs} from "../components/tabs";
 import {extendOrderBuilding, ORDER_BUILDER, POSSIBLE_ORDERS} from "../utils/order_building";
 import {PowerOrderCreationForm} from "../forms/power_order_creation_form";
